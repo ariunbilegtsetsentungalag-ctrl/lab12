@@ -1,3 +1,5 @@
 template.docx
 __pycache__/
 *.pdf
+~$*
+lab13/
