@@ -126,3 +126,33 @@ def print_values(U):
 U, iters, history = value_iteration()
 print("Давталт:", iters, " U(1,1) =", round(U[(1, 1)], 3))
 print_values(U)
+
+# %% [markdown]
+# ## Алхам 6: Бодлого гаргах
+
+
+# %%
+# Төгсгөлийн бус төлөв бүрт хүлээгдэж буй утгыг хамгийн их болгох үйлдлийг сонгоно.
+def extract_policy(U):
+    return {
+        s: max(ACTIONS, key=lambda a: sum(p * U[s2] for p, s2 in trans(s, a)))
+        for s in STATES if s not in TERMINALS
+    }
+
+
+def print_policy(pi):
+    for y in range(H, 0, -1):
+        row = []
+        for x in range(1, W + 1):
+            s = (x, y)
+            if s in WALL:
+                row.append("#")
+            elif s in TERMINALS:
+                row.append("+1" if TERMINALS[s] > 0 else "-1")
+            else:
+                row.append(ARROW[pi[s]])
+        print(" ".join(f"{c:>2}" for c in row))
+
+
+pi = extract_policy(U)
+print_policy(pi)
