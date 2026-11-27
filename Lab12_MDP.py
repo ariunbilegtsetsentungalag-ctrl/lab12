@@ -156,3 +156,14 @@ def print_policy(pi):
 
 pi = extract_policy(U)
 print_policy(pi)
+
+# %% [markdown]
+# ## Алхам 7: Шагналыг өөрчлөх
+
+# %%
+for r in [-0.04, -0.4, -2.0]:
+    Ur, it_r, _ = value_iteration(r=r)
+    pr = extract_policy(Ur)
+    bottom = " ".join(ARROW[pr[(x, 1)]] for x in range(1, 5))
+    print(f"r={r:6}: U(1,1)={Ur[(1, 1)]:7.3f}  давталт={it_r:3d}  доод мөр: {bottom}")
+    print_policy(pr)
