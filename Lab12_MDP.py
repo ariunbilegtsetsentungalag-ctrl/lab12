@@ -90,3 +90,39 @@ def trans(s, a):
 
 print(trans((1, 1), "^"))  # [(0.8,(1,2)), (0.1,(1,1)), (0.1,(2,1))]
 print(trans((3, 2), ">"))
+
+# %% [markdown]
+# ## Алхам 5: Утгын давталт
+
+
+# %%
+# Беллманы шинэчлэлийг delta < eps болтол давтана. history-д U(1,1)-ийг хадгална.
+def value_iteration(r=-0.04, gamma=1.0, eps=1e-6, max_iter=10000):
+    U = {s: 0.0 for s in STATES}
+    history = []
+    for it in range(1, max_iter + 1):
+        U2 = {}
+        for s in STATES:
+            if s in TERMINALS:
+                U2[s] = TERMINALS[s]
+            else:
+                U2[s] = r + gamma * max(sum(p * U[s2] for p, s2 in trans(s, a)) for a in ACTIONS)
+        delta = max(abs(U2[s] - U[s]) for s in STATES)
+        U = U2
+        history.append(U[(1, 1)])
+        if delta < eps:
+            break
+    return U, it, history
+
+
+def print_values(U):
+    for y in range(H, 0, -1):
+        row = []
+        for x in range(1, W + 1):
+            row.append("  ###" if (x, y) in WALL else f"{U[(x, y)]:5.2f}")
+        print(" ".join(row))
+
+
+U, iters, history = value_iteration()
+print("Давталт:", iters, " U(1,1) =", round(U[(1, 1)], 3))
+print_values(U)
