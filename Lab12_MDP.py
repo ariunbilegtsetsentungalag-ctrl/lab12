@@ -167,3 +167,62 @@ for r in [-0.04, -0.4, -2.0]:
     bottom = " ".join(ARROW[pr[(x, 1)]] for x in range(1, 5))
     print(f"r={r:6}: U(1,1)={Ur[(1, 1)]:7.3f}  давталт={it_r:3d}  доод мөр: {bottom}")
     print_policy(pr)
+
+# %% [markdown]
+# ## Алхам 8: График ба хөнгөлөлт γ
+
+# %%
+plt.figure(figsize=(6, 3.5))
+plt.plot(range(1, len(history) + 1), history, marker=".")
+plt.xlabel("Давталтын дугаар")
+plt.ylabel("U(1, 1)")
+plt.title("U(1,1)-ийн тогтворжилт (r=-0.04, γ=1)")
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.savefig("fig_history.png", dpi=150)
+
+
+def value_grid(U):
+    g = np.full((H, W), np.nan)
+    for (x, y), v in U.items():
+        g[H - y, x - 1] = v  # y = 3 мөр эхэнд
+    return g
+
+
+g = value_grid(U)
+plt.figure(figsize=(5, 3.8))
+plt.imshow(g, cmap="Greys")
+plt.colorbar(label="U(s)")
+for y in range(H):
+    for x in range(W):
+        if not np.isnan(g[y, x]):
+            v = g[y, x]
+            plt.text(x, y, f"{v:.2f}", ha="center", va="center",
+                     color="white" if v > 0.6 else "black")
+        else:
+            plt.text(x, y, "хана", ha="center", va="center", color="red")
+plt.xticks(range(W), [f"x={i}" for i in range(1, W + 1)])
+plt.yticks(range(H), [f"y={i}" for i in range(H, 0, -1)])
+plt.title("Утгын дулааны зураг")
+plt.tight_layout()
+plt.savefig("fig_heatmap.png", dpi=150)
+
+U9, it9, _ = value_iteration(gamma=0.9)
+print("γ=0.9: давталт =", it9, " U(1,1) =", round(U9[(1, 1)], 3))
+print_values(U9)
+print_policy(extract_policy(U9))
+
+# %% [markdown]
+# ## Нэмэлт 12.8: Гулгалтгүй ба эерэг шагналтай ертөнц
+
+# %%
+SLIPPERY = False
+Ud, itd, _ = value_iteration()
+print("Гулгалтгүй: U(1,1) =", round(Ud[(1, 1)], 3), " давталт =", itd)
+print_policy(extract_policy(Ud))
+SLIPPERY = True
+
+Up, itp, hp = value_iteration(r=0.1, max_iter=200)
+print("r=+0.1: давталт =", itp, " U(1,1) =", round(Up[(1, 1)], 2))
+print("U(1,1) 50, 100, 200 дахь давталтад:", [round(hp[i - 1], 2) for i in (50, 100, 200)])
+print_policy(extract_policy(Up))
