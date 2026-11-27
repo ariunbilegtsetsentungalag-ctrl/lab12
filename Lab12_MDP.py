@@ -49,3 +49,16 @@ try:
     expected_utility([(0.5, 10), (0.4, 20)])
 except ValueError as e:
     print("Шалгах:", e)
+
+# %% [markdown]
+# ## Алхам 3: Тор ертөнцийг тодорхойлох
+
+# %%
+W, H = 4, 3
+WALL = {(2, 2)}
+TERMINALS = {(4, 3): 1.0, (4, 2): -1.0}
+STATES = [(x, y) for x in range(1, W + 1) for y in range(1, H + 1) if (x, y) not in WALL]
+ACTIONS = {"^": (0, 1), "v": (0, -1), "<": (-1, 0), ">": (1, 0)}
+SIDE = {"^": ("<", ">"), "v": ("<", ">"), "<": ("^", "v"), ">": ("^", "v")}
+ARROW = {"^": "↑", "v": "↓", "<": "←", ">": "→"}
+print("Төлөвийн тоо:", len(STATES))  # 11
